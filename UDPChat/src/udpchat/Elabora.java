@@ -1,12 +1,14 @@
 package udpchat;
 
-import java.net.DatagramPacket;
-
 /**
  *
  * @author Davide
  */
 public class Elabora {
+    
+    /*
+        Classe che si occupa dell'elaborazione della richiesta che viene inviata dal client al server
+    */
     
     public static String elabora(Message messaggio){
         

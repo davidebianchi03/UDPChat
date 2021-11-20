@@ -53,7 +53,7 @@ public class Message {
         Metodo per salvare il contenuto dell'oggetto in una stringa in formato CSV
     */
     public String toCSV(){
-        String csv_string = comando + ";" + corpo_messaggio;
+        String csv_string = comando + ";" + corpo_messaggio+";";
         return csv_string;
     }
     

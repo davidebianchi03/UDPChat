@@ -1,5 +1,9 @@
 package udpchat;
 
+import java.net.SocketException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Davide
@@ -10,6 +14,12 @@ public class Frame extends javax.swing.JFrame {
         initComponents();
         txt_indirizzo_ip.setText("192.168.1.5");
         txt_indirizzo_ip.setEnabled(false);
+        try {
+            Listen l = new Listen();
+            l.start();
+        } catch (SocketException ex) {
+            Logger.getLogger(Frame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @SuppressWarnings("unchecked")

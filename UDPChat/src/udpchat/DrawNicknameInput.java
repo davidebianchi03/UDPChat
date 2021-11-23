@@ -10,17 +10,15 @@ import javax.swing.JTextField;
  *
  * @author Davide
  */
-public class DrawGraphics {
+public class DrawNicknameInput {
 
-    private Frame frame;
     public static JTextField txt_nickname;
 
-    public DrawGraphics(Frame frame) {
-        this.frame = frame;
+    public DrawNicknameInput() {
         txt_nickname = null;
     }
 
-    public void drawNicknameInput() {
+    public void draw(Frame frame) {
         //Rimuovo tutti i componenti sullo schermo
         frame.getContentPane().removeAll();
         frame.repaint();
@@ -36,10 +34,11 @@ public class DrawGraphics {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //get nickname
-                JTextField txt_nickname = DrawGraphics.txt_nickname;
-                DatiCondivisi.my_nickname = txt_nickname.getText();
+                JTextField txt_nickname = DrawNicknameInput.txt_nickname;
+                DatiCondivisi d = DatiCondivisi.getInstance();
+                d.setMyNickname(txt_nickname.getText());
                 //inizia ad ascoltare
-                drawChatPage();
+                //drawChatPage();
             }
         });
 
@@ -48,18 +47,6 @@ public class DrawGraphics {
         frame.add(btn_confirm_nickname);
         frame.revalidate();
         frame.repaint();
-    }
-
-    public void drawChatPage() {
-        //Rimuovo tutti i componenti sullo schermo
-        frame.getContentPane().removeAll();
-        frame.repaint();
-        //disegno la nuova pagina
-        
-    }
-
-    public String getNickname() {
-        return txt_nickname.getText();
     }
 
 }

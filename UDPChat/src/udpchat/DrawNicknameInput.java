@@ -25,7 +25,7 @@ public class DrawNicknameInput {
         //disegno la nuova pagina
         JLabel lbl_request = new JLabel("Inserisci il tuo nickname");
         lbl_request.setBounds(frame.getWidth() / 2 - 75, frame.getHeight() / 2, 150, 30);
-        txt_nickname = new JTextField("myip");
+        txt_nickname = new JTextField("User1234");
         txt_nickname.setBounds(frame.getWidth() / 2 - 75, frame.getHeight() / 2 + 25, 150, 30);
         JButton btn_confirm_nickname = new JButton("Conferma");
         btn_confirm_nickname.setBounds(frame.getWidth() / 2 - 75, frame.getHeight() / 2 + 55, 150, 30);
@@ -38,7 +38,8 @@ public class DrawNicknameInput {
                 DatiCondivisi d = DatiCondivisi.getInstance();
                 d.setMyNickname(txt_nickname.getText());
                 //inizia ad ascoltare
-                //drawChatPage();
+                DrawMessagePage drawMessagePage = new DrawMessagePage();
+                drawMessagePage.draw(frame);
             }
         });
 

@@ -9,6 +9,7 @@ public class DatiCondivisi {
     private String my_nickname = "";
     private Frame frame = null;
     private static DatiCondivisi instance = null;
+    private Connessione connessione = null;
     
     private DatiCondivisi(){
         
@@ -39,6 +40,16 @@ public class DatiCondivisi {
     public void setFrame(Frame frame) {
         this.frame = frame;
     }
+
+    public Connessione getConnessione() {
+        return connessione;
+    }
+
+    public void setConnessione(Connessione connessione) {
+        this.connessione = connessione;
+    }
+    
+    
     
     
     

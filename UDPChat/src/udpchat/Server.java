@@ -3,6 +3,7 @@ package udpchat;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
 
 /**
@@ -46,6 +47,9 @@ public class Server {
         String stringa_messaggio = messaggio.toCSV();
         byte[] buffer_invio = stringa_messaggio.getBytes();
         DatagramPacket pacchetto_invio = new DatagramPacket(buffer_invio, buffer_invio.length);
+        DatiCondivisi d = DatiCondivisi.getInstance();
+        pacchetto_invio.setAddress(messaggio.getIndirizzo_ip());
+        pacchetto_invio.setPort(2003);
         server_socket.send(pacchetto_invio);
     }
     
@@ -57,6 +61,7 @@ public class Server {
         DatagramPacket pacchetto_ricezione = new DatagramPacket(buffer_ricezione, buffer_ricezione.length);
         server_socket.receive(pacchetto_ricezione);
         Message messaggio = Message.loadFromDatagramPacket(pacchetto_ricezione);
+        messaggio.setIndirizzo_ip(pacchetto_ricezione.getAddress());
         return messaggio;
     }
     

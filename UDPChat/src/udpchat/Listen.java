@@ -36,8 +36,12 @@ public class Listen extends Thread {
                 Logger.getLogger(Listen.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-            //Elaboro i messaggi
-            Elabora.elabora(m);            
+            try {
+                //Elaboro i messaggi
+                Elabora.elabora(m);
+            } catch (SocketException ex) {
+                Logger.getLogger(Listen.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
 
     }

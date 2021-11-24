@@ -1,5 +1,7 @@
 package udpchat;
 
+import java.net.InetAddress;
+
 /**
  *
  * @author Davide
@@ -10,6 +12,7 @@ public class DatiCondivisi {
     private Frame frame = null;
     private static DatiCondivisi instance = null;
     private Connessione connessione = null;
+    private InetAddress remote_ip; 
     
     private DatiCondivisi(){
         
@@ -48,6 +51,16 @@ public class DatiCondivisi {
     public void setConnessione(Connessione connessione) {
         this.connessione = connessione;
     }
+
+    public InetAddress getRemote_ip() {
+        return remote_ip;
+    }
+
+    public void setRemote_ip(InetAddress remote_ip) {
+        this.remote_ip = remote_ip;
+    }
+    
+    
     
     
     

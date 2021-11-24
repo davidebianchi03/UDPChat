@@ -36,9 +36,10 @@ public class Connessione {
     /*
         Metodo per connettersi con l'altro peer inviando il messaggio di richiesta apertura connessione
      */
-    public boolean richiediConnessione(String my_nickname) throws SocketException, IOException {
+    public boolean richiediConnessione(String my_nickname, InetAddress indirizzo_ip) throws SocketException, IOException {
         if (!connessione_aperta) {
-            Message request_message = new Message("c", my_nickname);
+            Message request_message = new Message("c", my_nickname, indirizzo_ip);
+            request_message.setIndirizzo_ip(indirizzo_ip);
             Server s = Server.getInstance();
             s.sendMessage(request_message);
 

@@ -53,10 +53,11 @@ public class DrawMessagePage {
                     DatiCondivisi d = DatiCondivisi.getInstance();
                     String stringa_indirizzo_ip = txt_indirizzo_ip.getText();
                     InetAddress indirizzo_ip = InetAddress.getByName(stringa_indirizzo_ip);
+                    d.setRemote_ip(indirizzo_ip);
                     Connessione c = d.getConnessione();
                     if(c == null || !c.getConnessioneAperta()){
                         c = new Connessione( indirizzo_ip, 2003);
-                        c.richiediConnessione(d.getMyNickname());
+                        c.richiediConnessione(d.getMyNickname(), indirizzo_ip);
                     }
                     else{
                         JOptionPane.showMessageDialog(frame, "Non è possibile aprire una nuova connessione perchè ne è già stata stabilita una");

@@ -40,7 +40,7 @@ public class DrawMessagePage {
         lbl_nickname.setBounds(10, 0, 150, 30);
         frame.add(lbl_nickname);
         //Visualizzazione dei controlli per l'inserimento dell'ip dell'altro peer
-        txt_indirizzo_ip = new JTextField("127.0.0.1");/////////---->DA CAMBIARE
+        txt_indirizzo_ip = new JTextField("192.168.1.23");/////////---->DA CAMBIARE
         txt_indirizzo_ip.setBounds(frame.getWidth() - 225, 0, 100, 30);
         frame.add(txt_indirizzo_ip);
         btn_conferma_ip = new JButton("Connetti");
@@ -57,6 +57,7 @@ public class DrawMessagePage {
                     Connessione c = d.getConnessione();
                     if(c == null || !c.getConnessioneAperta()){
                         c = new Connessione( indirizzo_ip, 2003);
+                        d.setConnessione(c);
                         c.richiediConnessione(d.getMyNickname(), indirizzo_ip);
                     }
                     else{
@@ -76,6 +77,7 @@ public class DrawMessagePage {
             //Inizio ad ascoltare in attesa di richieste
             Listen listen = new Listen();
             listen.start();
+            d.setListen(listen);
         } catch (SocketException ex) {
             Logger.getLogger(DrawMessagePage.class.getName()).log(Level.SEVERE, null, ex);
         }

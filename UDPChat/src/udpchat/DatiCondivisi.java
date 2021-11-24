@@ -13,7 +13,7 @@ public class DatiCondivisi {
     private static DatiCondivisi instance = null;
     private Connessione connessione = null;
     private InetAddress remote_ip; 
-    
+    private Listen listen;
     private DatiCondivisi(){
         
     }
@@ -59,6 +59,15 @@ public class DatiCondivisi {
     public void setRemote_ip(InetAddress remote_ip) {
         this.remote_ip = remote_ip;
     }
+
+    public Listen getListen() {
+        return listen;
+    }
+
+    public void setListen(Listen listen) {
+        this.listen = listen;
+    }
+    
     
     
     

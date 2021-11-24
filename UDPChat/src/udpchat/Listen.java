@@ -32,10 +32,13 @@ public class Listen extends Thread {
             Message m = null;
             try {
                 m = server.receiveMessage();
+
             } catch (IOException ex) {
                 Logger.getLogger(Listen.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
+            DatiCondivisi d = DatiCondivisi.getInstance();
+            d.getConnessione().last_message = m;
             try {
                 //Elaboro i messaggi
                 Elabora.elabora(m);

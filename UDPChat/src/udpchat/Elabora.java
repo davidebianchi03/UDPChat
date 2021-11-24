@@ -31,8 +31,7 @@ public class Elabora {
                 if (dialog_result == 0) {
                     //Accetto la connessione
                     //rispondo con y;myNickname;
-                    messaggio_risposta = new Message("y",d.getMyNickname(), messaggio.getIndirizzo_ip());
-                    
+                    messaggio_risposta = new Message("y",d.getMyNickname(), messaggio.getIndirizzo_ip());                    
                 } else {
                     //Rifiuto la connessione
                     //rispondo con n
@@ -40,7 +39,7 @@ public class Elabora {
                 }
                 try {
                     s.sendMessage(messaggio_risposta);
-                    System.out.println(messaggio_risposta.getIndirizzo_ip());
+                    //System.out.println(messaggio_risposta.getIndirizzo_ip());
                 } catch (IOException ex) {
                     Logger.getLogger(Elabora.class.getName()).log(Level.SEVERE, null, ex);
                 }

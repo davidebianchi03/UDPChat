@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -18,6 +20,7 @@ public class Connessione {
     private int porta_destinatario;
     private String nickname_destinatario;
     private boolean connessione_aperta;
+    public Message last_message = null;
 
     public Connessione(int porta) {
         indirizzo_ip_destinatario = null;
@@ -41,9 +44,20 @@ public class Connessione {
             Message request_message = new Message("c", my_nickname, indirizzo_ip);
             request_message.setIndirizzo_ip(indirizzo_ip);
             Server s = Server.getInstance();
+            DatiCondivisi d = DatiCondivisi.getInstance();
+            last_message= null;
             s.sendMessage(request_message);
-
-            Message response_message = s.receiveMessage();
+            while(true){
+                try {
+                    //System.out.println(last_message);
+                    Thread.sleep(100);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                if(last_message != null)
+                    break;
+            }
+            Message response_message = last_message;
             if (response_message.getComando().equals("y")) {
                 //connessione accettata
                 int pos = response_message.getComando().length();

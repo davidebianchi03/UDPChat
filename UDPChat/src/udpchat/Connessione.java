@@ -58,6 +58,7 @@ public class Connessione {
                     break;
             }
             Message response_message = last_message;
+            System.out.println(response_message.getComando());
             if (response_message.getComando().equals("y")) {
                 //connessione accettata
                 int pos = response_message.getComando().length();

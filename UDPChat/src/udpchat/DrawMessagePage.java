@@ -22,7 +22,7 @@ public class DrawMessagePage {
     private JTextField txt_indirizzo_ip;
     private JButton btn_conferma_ip;
     private Frame frame;
-    private JLabel lbl_nickname;
+    private JLabel lbl_nickname_peer;
     
     public DrawMessagePage(){
         txt_indirizzo_ip = null;
@@ -44,9 +44,9 @@ public class DrawMessagePage {
         txt_indirizzo_ip = new JTextField("192.168.1.23");/////////---->DA CAMBIARE
         txt_indirizzo_ip.setBounds(frame.getWidth() - 225, 0, 100, 30);
         frame.add(txt_indirizzo_ip);
-        lbl_nickname = new JLabel("");
-        lbl_nickname.setBounds(frame.getWidth()/2 - 50 , 0, 100, 30);
-        frame.add(lbl_nickname);
+        lbl_nickname_peer = new JLabel("");
+        lbl_nickname_peer.setBounds(frame.getWidth()/2 - 50 , 0, 100, 30);
+        frame.add(lbl_nickname_peer);
         btn_conferma_ip = new JButton("Connetti");
         btn_conferma_ip.setBounds(frame.getWidth() - 120, 0, 100, 30);
         btn_conferma_ip.addActionListener(new ActionListener(){
@@ -96,7 +96,7 @@ public class DrawMessagePage {
     }
     
     void changeNomeDestinatario(String nome){
-        lbl_nickname.setText(nome);
+        lbl_nickname_peer.setText(nome);
     }
     
 }

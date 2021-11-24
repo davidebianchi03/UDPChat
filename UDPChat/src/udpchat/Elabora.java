@@ -44,12 +44,13 @@ public class Elabora {
                     } catch (IOException ex) {
                         Logger.getLogger(Elabora.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                }
-                Server s = Server.getInstance();
-                try {
-                    s.sendMessage(new Message("n", "", messaggio.getIndirizzo_ip()));
-                } catch (IOException ex) {
-                    Logger.getLogger(Elabora.class.getName()).log(Level.SEVERE, null, ex);
+                } else {
+                    Server s = Server.getInstance();
+                    try {
+                        s.sendMessage(new Message("n", "", messaggio.getIndirizzo_ip()));
+                    } catch (IOException ex) {
+                        Logger.getLogger(Elabora.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         } else {

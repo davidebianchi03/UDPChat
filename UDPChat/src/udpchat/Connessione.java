@@ -90,4 +90,22 @@ public class Connessione {
         indirizzo_ip_destinatario = null;
         connessione_aperta = false;
     }
+
+    public InetAddress getIndirizzo_ip_destinatario() {
+        return indirizzo_ip_destinatario;
+    }
+
+    public void setIndirizzo_ip_destinatario(InetAddress indirizzo_ip_destinatario) {
+        this.indirizzo_ip_destinatario = indirizzo_ip_destinatario;
+    }
+
+    public String getNickname_destinatario() {
+        return nickname_destinatario;
+    }
+
+    public void setNickname_destinatario(String nickname_destinatario) {
+        this.nickname_destinatario = nickname_destinatario;
+    }
+    
+    
 }

@@ -22,6 +22,7 @@ public class DrawMessagePage {
     private JTextField txt_indirizzo_ip;
     private JButton btn_conferma_ip;
     private Frame frame;
+    private JLabel lbl_nickname;
     
     public DrawMessagePage(){
         txt_indirizzo_ip = null;
@@ -43,6 +44,9 @@ public class DrawMessagePage {
         txt_indirizzo_ip = new JTextField("192.168.1.23");/////////---->DA CAMBIARE
         txt_indirizzo_ip.setBounds(frame.getWidth() - 225, 0, 100, 30);
         frame.add(txt_indirizzo_ip);
+        lbl_nickname = new JLabel("");
+        lbl_nickname.setBounds(frame.getWidth()/2 - 50 , 0, 100, 30);
+        frame.add(lbl_nickname);
         btn_conferma_ip = new JButton("Connetti");
         btn_conferma_ip.setBounds(frame.getWidth() - 120, 0, 100, 30);
         btn_conferma_ip.addActionListener(new ActionListener(){
@@ -58,7 +62,13 @@ public class DrawMessagePage {
                     if(c == null || !c.getConnessioneAperta()){
                         c = new Connessione( indirizzo_ip, 2003);
                         d.setConnessione(c);
-                        c.richiediConnessione(d.getMyNickname(), indirizzo_ip);
+                        boolean risultato_connessione = c.richiediConnessione(d.getMyNickname(), indirizzo_ip);
+                        if(!risultato_connessione){
+                            JOptionPane.showMessageDialog(frame, "L'altro host ha rifiutato la connessione");
+                        }
+                        else{
+                            changeNomeDestinatario(c.getNickname_destinatario());
+                        }
                     }
                     else{
                         JOptionPane.showMessageDialog(frame, "Non è possibile aprire una nuova connessione perchè ne è già stata stabilita una");
@@ -83,6 +93,10 @@ public class DrawMessagePage {
         }
         
         
+    }
+    
+    void changeNomeDestinatario(String nome){
+        lbl_nickname.setText(nome);
     }
     
 }

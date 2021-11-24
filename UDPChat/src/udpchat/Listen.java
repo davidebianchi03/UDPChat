@@ -38,7 +38,9 @@ public class Listen extends Thread {
             }
 
             DatiCondivisi d = DatiCondivisi.getInstance();
-            d.getConnessione().last_message = m;
+            if (d.getConnessione() != null) {
+                d.getConnessione().last_message = m;
+            }
             try {
                 //Elaboro i messaggi
                 Elabora.elabora(m);

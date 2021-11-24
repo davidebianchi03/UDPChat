@@ -58,11 +58,10 @@ public class Connessione {
                     break;
             }
             Message response_message = last_message;
-            System.out.println(response_message.getComando());
+            //System.out.println(response_message.getComando());
             if (response_message.getComando().equals("y")) {
                 //connessione accettata
-                int pos = response_message.getComando().length();
-                nickname_destinatario = response_message.getComando().substring(0, pos);
+                nickname_destinatario = response_message.getCorpo_messaggio();
                 connessione_aperta = true;
                 return true;
             } else {

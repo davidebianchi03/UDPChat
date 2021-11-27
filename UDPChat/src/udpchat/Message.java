@@ -34,7 +34,7 @@ public class Message {
         
         int pos = csv_string.indexOf(';');
         comando = csv_string.substring(0, pos);
-        corpo_messaggio = csv_string.substring(pos + 1, csv_string.length());
+        corpo_messaggio = csv_string.substring(pos + 1, csv_string.length()-1);
         
         //Creo oggetto messaggio e lo restituisco
         Message m = new Message(comando, corpo_messaggio, null);

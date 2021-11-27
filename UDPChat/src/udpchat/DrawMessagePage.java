@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -27,6 +29,8 @@ public class DrawMessagePage {
     private JLabel lbl_nickname_peer;
     private JScrollPane scroll_messages;
     private JLabel lbl_lista_messaggi;
+    private JTextField txt_messaggio;
+    private JButton btn_invia_messaggio;
 
     public DrawMessagePage() {
         txt_indirizzo_ip = null;
@@ -98,20 +102,62 @@ public class DrawMessagePage {
         } catch (SocketException ex) {
             Logger.getLogger(DrawMessagePage.class.getName()).log(Level.SEVERE, null, ex);
         }
+        //visualizzazione dei messaggi
         lbl_lista_messaggi = new JLabel();
         lbl_lista_messaggi.setBounds(0, 0, frame.getWidth(), frame.getHeight() - 50);
         scroll_messages = new JScrollPane(lbl_lista_messaggi);
         scroll_messages.setBounds(0, 50, frame.getWidth(), frame.getHeight() - 200);
         frame.add(scroll_messages);
+        //invio dei messaggi
+        txt_messaggio = new JTextField("Messaggio");
+        txt_messaggio.setBounds(0, frame.getHeight() - 100, frame.getWidth() - 250, 50);
+        frame.add(txt_messaggio);
+        btn_invia_messaggio = new JButton("Invia");
+        btn_invia_messaggio.setBounds(frame.getWidth() - 225, frame.getHeight() - 100, 150, 50);
+        frame.add(btn_invia_messaggio);
+
+        btn_invia_messaggio.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DatiCondivisi d = DatiCondivisi.getInstance();
+                if (d.getConnessione() == null) {
+                    d.setConnessione(new Connessione(2003));
+                }
+                Connessione c = d.getConnessione();
+
+                String testo_messaggio = txt_messaggio.getText();
+                //visualizzo il messaggio sull'interfaccia grafica
+                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                LocalDateTime now = LocalDateTime.now();
+                DrawMessagePage draw = d.getDrawMessagePage();
+                addMessage(dtf.format(now) + " ,From: " + "TU" + " ,Corpo: " + testo_messaggio);
+                //invio il messaggio
+                if (c.getConnessioneAperta()) {
+                    try {
+                        Server s = Server.getInstance();
+                        Message m = new Message("m", testo_messaggio, d.getRemote_ip());
+                        s.sendMessage(m);
+                    } catch (SocketException ex) {
+                        Logger.getLogger(DrawMessagePage.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (IOException ex) {
+                        Logger.getLogger(DrawMessagePage.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Prima di inviare un messaggio instaurare una connessione");
+                }
+            }
+        }
+        );
+
     }
 
     void changeNomeDestinatario(String nome) {
         lbl_nickname_peer.setText(nome);
     }
-    
+
     void addMessage(String message_body) {
         String string_to_write = lbl_lista_messaggi.getText().replace("<html><body>", "").replace("</body></html>", "") + "<br/>" + message_body;
-        lbl_lista_messaggi.setText("<html><body>"+ string_to_write+"</body></html>");
+        lbl_lista_messaggi.setText("<html><body>" + string_to_write + "</body></html>");
     }
 
 }

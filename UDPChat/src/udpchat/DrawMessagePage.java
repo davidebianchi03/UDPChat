@@ -1,5 +1,6 @@
 package udpchat;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 /**
@@ -23,6 +25,8 @@ public class DrawMessagePage {
     private JButton btn_conferma_ip;
     private Frame frame;
     private JLabel lbl_nickname_peer;
+    private JScrollPane scroll_messages;
+    private JLabel lbl_lista_messaggi;
 
     public DrawMessagePage() {
         txt_indirizzo_ip = null;
@@ -94,11 +98,20 @@ public class DrawMessagePage {
         } catch (SocketException ex) {
             Logger.getLogger(DrawMessagePage.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        lbl_lista_messaggi = new JLabel();
+        lbl_lista_messaggi.setBounds(0, 0, frame.getWidth(), frame.getHeight() - 50);
+        scroll_messages = new JScrollPane(lbl_lista_messaggi);
+        scroll_messages.setBounds(0, 50, frame.getWidth(), frame.getHeight() - 200);
+        frame.add(scroll_messages);
     }
 
     void changeNomeDestinatario(String nome) {
         lbl_nickname_peer.setText(nome);
+    }
+    
+    void addMessage(String message_body) {
+        String string_to_write = lbl_lista_messaggi.getText().replace("<html><body>", "").replace("</body></html>", "") + "<br/>" + message_body;
+        lbl_lista_messaggi.setText("<html><body>"+ string_to_write+"</body></html>");
     }
 
 }

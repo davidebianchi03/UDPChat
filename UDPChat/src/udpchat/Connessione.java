@@ -33,7 +33,7 @@ public class Connessione {
         this.indirizzo_ip_destinatario = indirizzo_ip;
         this.porta_destinatario = porta;
         nickname_destinatario = "";
-        connessione_aperta = false;
+        this.connessione_aperta = connessione_aperta;
     }
 
     /*
@@ -107,5 +107,8 @@ public class Connessione {
         this.nickname_destinatario = nickname_destinatario;
     }
     
+    public void apriConnessione(){
+        connessione_aperta = true;
+    }
     
 }

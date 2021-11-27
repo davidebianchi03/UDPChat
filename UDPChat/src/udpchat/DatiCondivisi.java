@@ -14,6 +14,7 @@ public class DatiCondivisi {
     private Connessione connessione = null;
     private InetAddress remote_ip; 
     private Listen listen;
+    private DrawMessagePage drawMessagePage;
     private DatiCondivisi(){
         
     }
@@ -66,6 +67,14 @@ public class DatiCondivisi {
 
     public void setListen(Listen listen) {
         this.listen = listen;
+    }
+
+    public DrawMessagePage getDrawMessagePage() {
+        return drawMessagePage;
+    }
+
+    public void setDrawMessagePage(DrawMessagePage drawMessagePage) {
+        this.drawMessagePage = drawMessagePage;
     }
     
     

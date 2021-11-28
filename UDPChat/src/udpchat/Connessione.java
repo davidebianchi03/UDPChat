@@ -22,12 +22,14 @@ public class Connessione {
     private String nickname_destinatario;
     private boolean connessione_aperta;
     public Message last_message = null;
+    public boolean connessione_in_corso;
 
     public Connessione(int porta) {
         indirizzo_ip_destinatario = null;
         porta_destinatario = porta;
         nickname_destinatario = "";
         connessione_aperta = false;
+        connessione_in_corso = false;
     }
 
     public Connessione(InetAddress indirizzo_ip, int porta) {
@@ -35,6 +37,7 @@ public class Connessione {
         this.porta_destinatario = porta;
         nickname_destinatario = "";
         this.connessione_aperta = connessione_aperta;
+        connessione_in_corso = false;
     }
 
     /*
@@ -44,6 +47,7 @@ public class Connessione {
 
         DatiCondivisi d = DatiCondivisi.getInstance();
         if (!connessione_aperta) {
+            connessione_in_corso = true;
             Message request_message = new Message("c", my_nickname, indirizzo_ip);
             request_message.setIndirizzo_ip(indirizzo_ip);
             Server s = Server.getInstance();
@@ -65,12 +69,12 @@ public class Connessione {
 
             Message response_message = last_message;
             //System.out.println(response_message.getComando());
+            connessione_in_corso = false;
             if (response_message.getComando().equals("y")) {
                 //connessione accettata
                 nickname_destinatario = response_message.getCorpo_messaggio();
                 connessione_aperta = true;
                 JOptionPane.showMessageDialog(d.getFrame(), "Connessione stabilita con successo");
-                d.getDrawMessagePage().hideStopConnectionPane();
                 return true;
             } else {
                 //rifiuto la connessione
@@ -94,7 +98,25 @@ public class Connessione {
     /*
         Metodo per chiudere una connessione se è già stata stabilita
      */
-    public void chiudiConnessione() {
+    public void richiediChiusuraConnessione() throws SocketException {
+        Server s = Server.getInstance();
+
+        Message risposta = new Message("e", "", indirizzo_ip_destinatario);
+        try {
+            s.sendMessage(risposta);
+        } catch (IOException ex) {
+            Logger.getLogger(Elabora.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        nickname_destinatario = "";
+        indirizzo_ip_destinatario = null;
+        connessione_aperta = false;
+    }
+    
+    /*
+        Metodo per chiudere la connessione senza inviare il messaggio all'altro host (questo metodo è utilizzato quando l'altro richiede la chiusura)
+    */
+    public void chiudiConnessione(){
         nickname_destinatario = "";
         indirizzo_ip_destinatario = null;
         connessione_aperta = false;
@@ -118,6 +140,10 @@ public class Connessione {
 
     public void apriConnessione() {
         connessione_aperta = true;
+    }
+
+    public boolean isConnessione_in_corso() {
+        return connessione_in_corso;
     }
 
 }

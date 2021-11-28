@@ -32,6 +32,7 @@ public class DrawMessagePage {
     private JButton btn_invia_messaggio;
     private JOptionPane stop_connection_pane;
     private JButton stop_connection_button;
+    private SendConnectionRequest cr;
 
     public DrawMessagePage() {
         txt_indirizzo_ip = null;
@@ -56,7 +57,7 @@ public class DrawMessagePage {
         txt_indirizzo_ip.setBounds(frame.getWidth() - 465, 5, 100, 30);
         frame.add(txt_indirizzo_ip);
         lbl_nickname_peer = new JLabel("");
-        lbl_nickname_peer.setBounds(frame.getWidth() / 2 - 50, 5, 100, 30);
+        lbl_nickname_peer.setBounds(frame.getWidth() / 2 - 150, 5, 100, 30);
         frame.add(lbl_nickname_peer);
         btn_conferma_ip = new JButton("Connetti");
         btn_conferma_ip.setBounds(frame.getWidth() - 340, 5, 100, 30);
@@ -69,12 +70,9 @@ public class DrawMessagePage {
                     }
                     String stringa_indirizzo_ip = txt_indirizzo_ip.getText();
                     InetAddress indirizzo_ip = InetAddress.getByName(stringa_indirizzo_ip);
-                    SendConnectionRequest cr = new SendConnectionRequest(indirizzo_ip);
+                    cr = new SendConnectionRequest(indirizzo_ip);
                     cr.start();
-                    //stop_connection_pane = new JOptionPane();
-                    //JOptionPane.showMessageDialog(frame, "Per interropere la connessione premere OK mentre è ancora in corso la richiesta di connessione");
-                    //cr.stop();
-
+                    
                 } catch (UnknownHostException ex) {
                     Logger.getLogger(DrawMessagePage.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -140,10 +138,36 @@ public class DrawMessagePage {
             }
         }
         );
-        
+
         stop_connection_button = new JButton("<html><body>Interrompi connessione/<br>tentativo connessione</body></html>");
         stop_connection_button.setBounds(frame.getWidth() - 220, 0, 200, 50);
         frame.add(stop_connection_button);
+        stop_connection_button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //interrompi connessione/tentativo di connessione
+                Connessione connessione = d.getConnessione();
+                if (connessione.isConnessione_in_corso()) {
+                    //se sta si sta aprendo una connessione, l'annullo
+                    cr.annullaConnessione();
+                    JOptionPane.showMessageDialog(frame, "La connessione è stata annullata con successo");
+                } else if (connessione.getConnessioneAperta()) {
+                    int result = JOptionPane.showConfirmDialog(frame, "Sei sicuro di voler chiudere la connessione?");
+                    if(result == JOptionPane.YES_OPTION){
+                        try {
+                            //se la connessione è già stata aperta la chiudo
+                            connessione.richiediChiusuraConnessione();
+                        } catch (SocketException ex) {
+                            Logger.getLogger(DrawMessagePage.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        System.out.println("Connessione chiusa");
+                    }
+                    
+                    
+                }
+                connessioneChiusa();
+            }
+        });
     }
 
     void changeNomeDestinatario(String nome) {
@@ -157,6 +181,13 @@ public class DrawMessagePage {
 
     void hideStopConnectionPane() {
         stop_connection_pane.setVisible(false);
+    }
+    
+    void connessioneChiusa(){
+        //cancello il nickname
+        lbl_nickname_peer.setText("");
+        //cancello tutti i messaggi
+        lbl_lista_messaggi.setText("");
     }
 
 }

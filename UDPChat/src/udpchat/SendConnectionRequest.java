@@ -19,11 +19,13 @@ public class SendConnectionRequest extends Thread {
     private Connessione connessione;
     private InetAddress indirizzo_ip;
     private DrawMessagePage draw;
+    private boolean connessione_annullata;
 
     public SendConnectionRequest(InetAddress indirizzo_ip) {
         this.connessione = DatiCondivisi.getInstance().getConnessione();
         this.indirizzo_ip = indirizzo_ip;
         this.draw = DatiCondivisi.getInstance().getDrawMessagePage();
+        connessione_annullata = false;
     }
 
     @Override
@@ -54,6 +56,14 @@ public class SendConnectionRequest extends Thread {
             Logger.getLogger(DrawMessagePage.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        //se nel mentre l'utente ha deciso di annullare la connessione invio il messaggio di chiusura connessione
+        if (connessione_annullata) {
+            connessione.chiudiConnessione();
+        }
+    }
+
+    void annullaConnessione() {
+        connessione_annullata = true;
     }
 
 }

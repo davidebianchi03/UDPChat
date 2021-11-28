@@ -1,18 +1,19 @@
 package udpchat;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
@@ -27,21 +28,24 @@ public class DrawMessagePage {
     private Frame frame;
     private JLabel lbl_nickname_peer;
     private JScrollPane scroll_messages;
-    private JLabel lbl_lista_messaggi;
+    private JPanel panel_lista_messaggi;
     private JTextField txt_messaggio;
     private JButton btn_invia_messaggio;
     private JOptionPane stop_connection_pane;
     private JButton stop_connection_button;
     private SendConnectionRequest cr;
+    private int last_message_y;
 
     public DrawMessagePage() {
         txt_indirizzo_ip = null;
         btn_conferma_ip = null;
         DatiCondivisi d = DatiCondivisi.getInstance();
         d.setDrawMessagePage(this);
+        last_message_y = 0;
     }
 
     public void draw(Frame frame) {
+        last_message_y = 0;
         this.frame = frame;
         //Rimuovo tutti i componenti sullo schermo
         frame.getContentPane().removeAll();
@@ -72,7 +76,7 @@ public class DrawMessagePage {
                     InetAddress indirizzo_ip = InetAddress.getByName(stringa_indirizzo_ip);
                     cr = new SendConnectionRequest(indirizzo_ip);
                     cr.start();
-                    
+
                 } catch (UnknownHostException ex) {
                     Logger.getLogger(DrawMessagePage.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -90,10 +94,10 @@ public class DrawMessagePage {
             Logger.getLogger(DrawMessagePage.class.getName()).log(Level.SEVERE, null, ex);
         }
         //visualizzazione dei messaggi
-        lbl_lista_messaggi = new JLabel();
-        lbl_lista_messaggi.setBounds(0, 0, frame.getWidth(), frame.getHeight() - 50);
-        scroll_messages = new JScrollPane(lbl_lista_messaggi);
-        scroll_messages.setBounds(0, 50, frame.getWidth(), frame.getHeight() - 200);
+        panel_lista_messaggi = new JPanel();
+        panel_lista_messaggi.setBounds(0, 0, frame.getWidth() - 125, frame.getHeight() - 200);
+        scroll_messages = new JScrollPane(panel_lista_messaggi);
+        scroll_messages.setBounds(20, 50, frame.getWidth() - 50, frame.getHeight() - 200);
         frame.add(scroll_messages);
         //invio dei messaggi
         txt_messaggio = new JTextField("Messaggio");
@@ -118,10 +122,11 @@ public class DrawMessagePage {
                 //invio il messaggio
                 if (c.getConnessioneAperta()) {
                     //visualizzazione del messaggio
-                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-                    LocalDateTime now = LocalDateTime.now();
-                    DrawMessagePage draw = d.getDrawMessagePage();
-                    addMessage(dtf.format(now) + " ,From: " + "TU" + " ,Corpo: " + testo_messaggio);
+//                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+//                    LocalDateTime now = LocalDateTime.now();
+//                    DrawMessagePage draw = d.getDrawMessagePage();
+//                    addMessage(dtf.format(now) + " ,From: " + "TU" + " ,Corpo: " + testo_messaggio);
+                    addMessage(testo_messaggio, false);
                     //invio del messaggio
                     try {
                         Server s = Server.getInstance();
@@ -153,7 +158,7 @@ public class DrawMessagePage {
                     JOptionPane.showMessageDialog(frame, "La connessione è stata annullata con successo");
                 } else if (connessione.getConnessioneAperta()) {
                     int result = JOptionPane.showConfirmDialog(frame, "Sei sicuro di voler chiudere la connessione?");
-                    if(result == JOptionPane.YES_OPTION){
+                    if (result == JOptionPane.YES_OPTION) {
                         try {
                             //se la connessione è già stata aperta la chiudo
                             connessione.richiediChiusuraConnessione();
@@ -162,8 +167,7 @@ public class DrawMessagePage {
                         }
                         System.out.println("Connessione chiusa");
                     }
-                    
-                    
+
                 }
                 connessioneChiusa();
             }
@@ -174,20 +178,60 @@ public class DrawMessagePage {
         lbl_nickname_peer.setText(nome);
     }
 
-    void addMessage(String message_body) {
-        String string_to_write = lbl_lista_messaggi.getText().replace("<html><body>", "").replace("</body></html>", "") + "<br/>" + message_body;
-        lbl_lista_messaggi.setText("<html><body>" + string_to_write + "</body></html>");
+    void addMessage(String message, boolean messaggio_ricevuto) {
+        
+        JLabel message_lbl = new JLabel(message);
+        
+        int width = message_lbl.getText().length() * 11;
+        int height = message_lbl.getText().length() * 20;
+        
+        
+        
+        if (messaggio_ricevuto){//se il messaggio è stato ricevuto lo allineo a sinistra e gli cambio il colore in grigio
+            message_lbl.setBounds(10, last_message_y, width, 50);
+            message_lbl.setBackground(new Color(171, 171, 171));
+        }
+        else{//se il messaggio è stato ricevuto lo allineo a sinistra e gli cambio il colore in azzurro
+            message_lbl.setBounds(panel_lista_messaggi.getWidth() - 50 - width, last_message_y, width, 50);
+            message_lbl.setBackground(new Color(0, 183, 255));
+        }
+        message_lbl.setOpaque(true);
+        TextBubbleBorder border = new TextBubbleBorder(Color.BLACK,1,16,16);
+        message_lbl.setBorder(border);
+        
+        panel_lista_messaggi.add(message_lbl);
+        int new_line_count = countMatches(message_lbl.getText(), "<br>");
+        last_message_y += 60 + 10 * new_line_count;
+        message_lbl.setPreferredSize(new Dimension(message_lbl.getText().length() * 3, new_line_count * 7));
+        frame.repaint();
     }
 
     void hideStopConnectionPane() {
         stop_connection_pane.setVisible(false);
     }
-    
-    void connessioneChiusa(){
+
+    void connessioneChiusa() {
         //cancello il nickname
         lbl_nickname_peer.setText("");
         //cancello tutti i messaggi
-        lbl_lista_messaggi.setText("");
+        //panel_lista_messaggi.setText("");
+        last_message_y = 0;
+    }
+
+    int countMatches(String str, String findStr) {
+        int lastIndex = 0;
+        int count = 0;
+
+        while (lastIndex != -1) {
+
+            lastIndex = str.indexOf(findStr, lastIndex);
+
+            if (lastIndex != -1) {
+                count++;
+                lastIndex += findStr.length();
+            }
+        }
+        return count;
     }
 
 }

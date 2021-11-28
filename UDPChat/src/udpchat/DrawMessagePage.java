@@ -2,6 +2,8 @@ package udpchat;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -94,10 +96,14 @@ public class DrawMessagePage {
             Logger.getLogger(DrawMessagePage.class.getName()).log(Level.SEVERE, null, ex);
         }
         //visualizzazione dei messaggi
-        panel_lista_messaggi = new JPanel();
+        panel_lista_messaggi = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
         panel_lista_messaggi.setBounds(0, 0, frame.getWidth() - 125, frame.getHeight() - 200);
         scroll_messages = new JScrollPane(panel_lista_messaggi);
         scroll_messages.setBounds(20, 50, frame.getWidth() - 50, frame.getHeight() - 200);
+        //panel_lista_messaggi.setPreferredSize(new Dimension(frame.getWidth() - 50, (frame.getHeight() - 200)));
+        scroll_messages.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll_messages.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
         frame.add(scroll_messages);
         //invio dei messaggi
         txt_messaggio = new JTextField("Messaggio");
@@ -178,32 +184,41 @@ public class DrawMessagePage {
         lbl_nickname_peer.setText(nome);
     }
 
+    int msg_counter = 0;
+
     void addMessage(String message, boolean messaggio_ricevuto) {
-        
+
         JLabel message_lbl = new JLabel(message);
-        
+
         int width = message_lbl.getText().length() * 11;
         int height = message_lbl.getText().length() * 20;
-        
-        
-        
-        if (messaggio_ricevuto){//se il messaggio è stato ricevuto lo allineo a sinistra e gli cambio il colore in grigio
-            message_lbl.setBounds(10, last_message_y, width, 50);
-            message_lbl.setBackground(new Color(171, 171, 171));
+
+        if (last_message_y > panel_lista_messaggi.getHeight() - 100) {
+            panel_lista_messaggi.removeAll();
+            last_message_y = 0;
         }
-        else{//se il messaggio è stato ricevuto lo allineo a sinistra e gli cambio il colore in azzurro
+
+        TextBubbleBorder border;
+        if (messaggio_ricevuto) {//se il messaggio è stato ricevuto lo allineo a sinistra e gli cambio il colore in grigio
+            message_lbl.setBounds(10, last_message_y, width, 50);
+            message_lbl.setBackground(new Color(204, 204, 204));
+            border = new TextBubbleBorder(Color.BLACK, 1, 16, 16);
+        } else {//se il messaggio è stato ricevuto lo allineo a sinistra e gli cambio il colore in azzurro
             message_lbl.setBounds(panel_lista_messaggi.getWidth() - 50 - width, last_message_y, width, 50);
-            message_lbl.setBackground(new Color(0, 183, 255));
+            message_lbl.setText("<html><body><font color='white'>" + message_lbl.getText() + "</font></body></html>");
+            message_lbl.setBackground(new Color(71, 160, 255));
+            border = new TextBubbleBorder(Color.BLACK, 1, 16, 16, false);
         }
         message_lbl.setOpaque(true);
-        TextBubbleBorder border = new TextBubbleBorder(Color.BLACK,1,16,16);
         message_lbl.setBorder(border);
-        
-        panel_lista_messaggi.add(message_lbl);
+
         int new_line_count = countMatches(message_lbl.getText(), "<br>");
         last_message_y += 60 + 10 * new_line_count;
         message_lbl.setPreferredSize(new Dimension(message_lbl.getText().length() * 3, new_line_count * 7));
-        frame.repaint();
+        panel_lista_messaggi.add(message_lbl);
+        //panel_lista_messaggi.revalidate();
+        panel_lista_messaggi.repaint();
+
     }
 
     void hideStopConnectionPane() {

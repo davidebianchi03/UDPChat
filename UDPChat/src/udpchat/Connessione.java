@@ -6,6 +6,7 @@ import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -40,29 +41,36 @@ public class Connessione {
         Metodo per connettersi con l'altro peer inviando il messaggio di richiesta apertura connessione
      */
     public boolean richiediConnessione(String my_nickname, InetAddress indirizzo_ip) throws SocketException, IOException {
+
+        DatiCondivisi d = DatiCondivisi.getInstance();
         if (!connessione_aperta) {
             Message request_message = new Message("c", my_nickname, indirizzo_ip);
             request_message.setIndirizzo_ip(indirizzo_ip);
             Server s = Server.getInstance();
-            DatiCondivisi d = DatiCondivisi.getInstance();
-            last_message= null;
+
+            last_message = null;
             s.sendMessage(request_message);
-            while(true){
+            while (true) {
                 try {
                     //System.out.println(last_message);
-                    Thread.sleep(100);
+                    Thread.sleep(200);
                 } catch (InterruptedException ex) {
                     Logger.getLogger(Connessione.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                if(last_message != null)
+                if (last_message != null) {
                     break;
+                }
             }
+            System.out.println("");
+
             Message response_message = last_message;
             //System.out.println(response_message.getComando());
             if (response_message.getComando().equals("y")) {
                 //connessione accettata
                 nickname_destinatario = response_message.getCorpo_messaggio();
                 connessione_aperta = true;
+                JOptionPane.showMessageDialog(d.getFrame(), "Connessione stabilita con successo");
+                d.getDrawMessagePage().hideStopConnectionPane();
                 return true;
             } else {
                 //rifiuto la connessione
@@ -71,6 +79,7 @@ public class Connessione {
                 connessione_aperta = false;
                 return false;
             }
+
         }
         return false;
     }
@@ -106,9 +115,9 @@ public class Connessione {
     public void setNickname_destinatario(String nickname_destinatario) {
         this.nickname_destinatario = nickname_destinatario;
     }
-    
-    public void apriConnessione(){
+
+    public void apriConnessione() {
         connessione_aperta = true;
     }
-    
+
 }

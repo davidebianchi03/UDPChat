@@ -1,6 +1,5 @@
 package udpchat;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -31,6 +30,8 @@ public class DrawMessagePage {
     private JLabel lbl_lista_messaggi;
     private JTextField txt_messaggio;
     private JButton btn_invia_messaggio;
+    private JOptionPane stop_connection_pane;
+    private JButton stop_connection_button;
 
     public DrawMessagePage() {
         txt_indirizzo_ip = null;
@@ -52,44 +53,32 @@ public class DrawMessagePage {
         frame.add(lbl_nickname);
         //Visualizzazione dei controlli per l'inserimento dell'ip dell'altro peer
         txt_indirizzo_ip = new JTextField("192.168.1.23");/////////---->DA CAMBIARE
-        txt_indirizzo_ip.setBounds(frame.getWidth() - 225, 0, 100, 30);
+        txt_indirizzo_ip.setBounds(frame.getWidth() - 465, 5, 100, 30);
         frame.add(txt_indirizzo_ip);
         lbl_nickname_peer = new JLabel("");
-        lbl_nickname_peer.setBounds(frame.getWidth() / 2 - 50, 0, 100, 30);
+        lbl_nickname_peer.setBounds(frame.getWidth() / 2 - 50, 5, 100, 30);
         frame.add(lbl_nickname_peer);
         btn_conferma_ip = new JButton("Connetti");
-        btn_conferma_ip.setBounds(frame.getWidth() - 120, 0, 100, 30);
+        btn_conferma_ip.setBounds(frame.getWidth() - 340, 5, 100, 30);
         btn_conferma_ip.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    //Invia richiesta
-                    DatiCondivisi d = DatiCondivisi.getInstance();
-                    String stringa_indirizzo_ip = txt_indirizzo_ip.getText();
-                    InetAddress indirizzo_ip = InetAddress.getByName(stringa_indirizzo_ip);
-                    d.setRemote_ip(indirizzo_ip);
                     if (d.getConnessione() == null) {
                         d.setConnessione(new Connessione(2003));
                     }
-                    Connessione c = d.getConnessione();
-                    if (!c.getConnessioneAperta()) {
-                        c = new Connessione(indirizzo_ip, 2003);
-                        d.setConnessione(c);
-                        boolean risultato_connessione = c.richiediConnessione(d.getMyNickname(), indirizzo_ip);
-                        if (!risultato_connessione) {
-                            JOptionPane.showMessageDialog(frame, "L'altro host ha rifiutato la connessione");
-                        } else {
-                            changeNomeDestinatario(c.getNickname_destinatario());
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(frame, "Non è possibile aprire una nuova connessione perchè ne è già stata stabilita una");
-                    }
+                    String stringa_indirizzo_ip = txt_indirizzo_ip.getText();
+                    InetAddress indirizzo_ip = InetAddress.getByName(stringa_indirizzo_ip);
+                    SendConnectionRequest cr = new SendConnectionRequest(indirizzo_ip);
+                    cr.start();
+                    //stop_connection_pane = new JOptionPane();
+                    //JOptionPane.showMessageDialog(frame, "Per interropere la connessione premere OK mentre è ancora in corso la richiesta di connessione");
+                    //cr.stop();
 
                 } catch (UnknownHostException ex) {
                     Logger.getLogger(DrawMessagePage.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(DrawMessagePage.class.getName()).log(Level.SEVERE, null, ex);
                 }
+
             }
 
         });
@@ -127,12 +116,15 @@ public class DrawMessagePage {
 
                 String testo_messaggio = txt_messaggio.getText();
                 //visualizzo il messaggio sull'interfaccia grafica
-                DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-                LocalDateTime now = LocalDateTime.now();
-                DrawMessagePage draw = d.getDrawMessagePage();
-                addMessage(dtf.format(now) + " ,From: " + "TU" + " ,Corpo: " + testo_messaggio);
+
                 //invio il messaggio
                 if (c.getConnessioneAperta()) {
+                    //visualizzazione del messaggio
+                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                    LocalDateTime now = LocalDateTime.now();
+                    DrawMessagePage draw = d.getDrawMessagePage();
+                    addMessage(dtf.format(now) + " ,From: " + "TU" + " ,Corpo: " + testo_messaggio);
+                    //invio del messaggio
                     try {
                         Server s = Server.getInstance();
                         Message m = new Message("m", testo_messaggio, d.getRemote_ip());
@@ -148,7 +140,10 @@ public class DrawMessagePage {
             }
         }
         );
-
+        
+        stop_connection_button = new JButton("<html><body>Interrompi connessione/<br>tentativo connessione</body></html>");
+        stop_connection_button.setBounds(frame.getWidth() - 220, 0, 200, 50);
+        frame.add(stop_connection_button);
     }
 
     void changeNomeDestinatario(String nome) {
@@ -158,6 +153,10 @@ public class DrawMessagePage {
     void addMessage(String message_body) {
         String string_to_write = lbl_lista_messaggi.getText().replace("<html><body>", "").replace("</body></html>", "") + "<br/>" + message_body;
         lbl_lista_messaggi.setText("<html><body>" + string_to_write + "</body></html>");
+    }
+
+    void hideStopConnectionPane() {
+        stop_connection_pane.setVisible(false);
     }
 
 }

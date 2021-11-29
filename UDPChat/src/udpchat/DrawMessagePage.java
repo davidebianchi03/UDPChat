@@ -131,11 +131,6 @@ public class DrawMessagePage {
 
                 //invio il messaggio
                 if (c.getConnessioneAperta()) {
-                    //visualizzazione del messaggio
-//                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-//                    LocalDateTime now = LocalDateTime.now();
-//                    DrawMessagePage draw = d.getDrawMessagePage();
-//                    addMessage(dtf.format(now) + " ,From: " + "TU" + " ,Corpo: " + testo_messaggio);
                     addMessage(testo_messaggio, false);
                     //invio del messaggio
                     try {
@@ -200,19 +195,22 @@ public class DrawMessagePage {
         String time_stamp = new SimpleDateFormat("dd/MM/yyyy  HH:mm").format(new Date());
         JLabel time_label = new JLabel(time_stamp);
         
+        if(width < 50){
+            width = 50;
+        }
 
         TextBubbleBorder border;
         if (messaggio_ricevuto) {//se il messaggio è stato ricevuto lo allineo a sinistra e gli cambio il colore in grigio
             message_lbl.setBounds(10, last_message_y, width, 50);
             message_lbl.setBackground(new Color(204, 204, 204));
             border = new TextBubbleBorder(Color.BLACK, 1, 16, 16);
-            time_label.setBounds(10, last_message_y - 35, width, 50);
+            time_label.setBounds(10, last_message_y - 35, 100, 50);
         } else {//se il messaggio è stato ricevuto lo allineo a sinistra e gli cambio il colore in azzurro
             message_lbl.setBounds(panel_lista_messaggi.getWidth() - 50 - width, last_message_y, width, 50);
             message_lbl.setText("<html><body><font color='white'>" + message_lbl.getText() + "</font></body></html>");
             message_lbl.setBackground(new Color(71, 160, 255));
             border = new TextBubbleBorder(Color.BLACK, 1, 16, 16, false);
-            time_label.setBounds(panel_lista_messaggi.getWidth() - 50 - width, last_message_y - 35, width, 50);
+            time_label.setBounds(panel_lista_messaggi.getWidth() - 50 - width, last_message_y - 35, 100, 50);
         }
         message_lbl.setOpaque(true);
         message_lbl.setBorder(border);

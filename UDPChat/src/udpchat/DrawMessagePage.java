@@ -27,6 +27,10 @@ import javax.swing.JTextField;
  *
  * @author Davide
  */
+
+/*
+    Classe che disegna la pagina di visualizzazione dell'interfaccia per inviare/ricevere i messaggi
+*/
 public class DrawMessagePage {
 
     private JTextField txt_indirizzo_ip;
@@ -51,7 +55,7 @@ public class DrawMessagePage {
     }
 
     public void draw(Frame frame) {
-        last_message_y = 0;
+        last_message_y = 30;
         this.frame = frame;
         //Rimuovo tutti i componenti sullo schermo
         frame.getContentPane().removeAll();
@@ -236,8 +240,9 @@ public class DrawMessagePage {
         //cancello il nickname
         lbl_nickname_peer.setText("");
         //cancello tutti i messaggi
-        //panel_lista_messaggi.setText("");
-        last_message_y = 0;
+        panel_lista_messaggi.removeAll();
+        last_message_y = 30;
+        panel_lista_messaggi.repaint();
     }
 
     int countMatches(String str, String findStr) {

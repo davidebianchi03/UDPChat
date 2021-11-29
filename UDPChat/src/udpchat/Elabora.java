@@ -25,10 +25,10 @@ public class Elabora {
         }
 
         String comando = messaggio.getComando();
-
+        
         if (comando.equals("c") && !d.getConnessione().getConnessioneAperta()) {
             AcceptConnection.acceptConnection(messaggio);
-        } else if ("c".equals(comando) && d.getConnessione().getConnessioneAperta()) {
+        } else if (comando.equals("c") && d.getConnessione().getConnessioneAperta()) {
             //rifiuto la connessione di default perchè ne ho già aperta un'altra
             Message risposta = new Message("n", "", messaggio.getIndirizzo_ip());
             try {

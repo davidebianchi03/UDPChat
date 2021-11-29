@@ -12,6 +12,10 @@ import java.time.format.DateTimeFormatter;
  */
 public class ShowReceivedMessage {
 
+    /*
+        Classe per visualizzare i messaggi ricevuti
+    */
+    
     public static void showMessage(Message messaggio) {
         String corpo_messaggio = messaggio.getCorpo_messaggio();
         DatiCondivisi d = DatiCondivisi.getInstance();
@@ -19,11 +23,10 @@ public class ShowReceivedMessage {
         Connessione connessione = d.getConnessione();
         String nickname = connessione.getNickname_destinatario();//nickname dell'altro peer
 
-        System.out.println("Messaggio da: " + nickname + ", corpo messaggio: " + corpo_messaggio);
+        //System.out.println("Messaggio da: " + nickname + ", corpo messaggio: " + corpo_messaggio);
 
         DrawMessagePage draw = d.getDrawMessagePage();
         draw.addMessage(corpo_messaggio, true);
-
     }
 
 }

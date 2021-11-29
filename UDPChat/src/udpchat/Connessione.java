@@ -18,7 +18,7 @@ public class Connessione {
         Classe che si occupa di instaurare una connessione e di mantenere i dati dell'altro peer
      */
     private InetAddress indirizzo_ip_destinatario;
-    private int porta_destinatario;
+    private int porta_destinatario = 2003;
     private String nickname_destinatario;
     private boolean connessione_aperta;
     public Message last_message = null;
@@ -65,7 +65,6 @@ public class Connessione {
                     break;
                 }
             }
-            System.out.println("");
 
             Message response_message = last_message;
             //System.out.println(response_message.getComando());

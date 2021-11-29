@@ -1,7 +1,15 @@
 package udpchat;
 
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -22,7 +30,10 @@ public class DrawNicknameInput {
         //Rimuovo tutti i componenti sullo schermo
         frame.getContentPane().removeAll();
         frame.repaint();
+        
         //disegno la nuova pagina
+        
+        //input
         JLabel lbl_request = new JLabel("Inserisci il tuo nickname");
         lbl_request.setBounds(frame.getWidth() / 2 - 75, frame.getHeight() / 2, 150, 30);
         txt_nickname = new JTextField("User1234");

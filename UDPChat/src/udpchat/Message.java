@@ -7,6 +7,10 @@ import java.net.InetAddress;
  *
  * @author Davide
  */
+
+/*
+    Classe messaggio contenente le informazioni su un messaggio da inviare/ricevuto
+*/
 public class Message {
 
     private String comando = null;

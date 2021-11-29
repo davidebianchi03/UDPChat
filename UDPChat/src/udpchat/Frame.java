@@ -10,6 +10,7 @@ public class Frame extends javax.swing.JFrame {
         initComponents();
         DrawNicknameInput draw = new DrawNicknameInput();
         draw.draw(this);
+       
     }
 
     @SuppressWarnings("unchecked")

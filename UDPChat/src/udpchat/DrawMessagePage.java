@@ -1,6 +1,7 @@
 package udpchat;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -96,7 +97,7 @@ public class DrawMessagePage {
             Logger.getLogger(DrawMessagePage.class.getName()).log(Level.SEVERE, null, ex);
         }
         //visualizzazione dei messaggi
-        panel_lista_messaggi = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        panel_lista_messaggi = new JPanel(null);
         panel_lista_messaggi.setBounds(0, 0, frame.getWidth() - 125, frame.getHeight() - 200);
         scroll_messages = new JScrollPane(panel_lista_messaggi);
         scroll_messages.setBounds(20, 50, frame.getWidth() - 50, frame.getHeight() - 200);
@@ -193,11 +194,6 @@ public class DrawMessagePage {
         int width = message_lbl.getText().length() * 11;
         int height = message_lbl.getText().length() * 20;
 
-        if (last_message_y > panel_lista_messaggi.getHeight() - 100) {
-            panel_lista_messaggi.removeAll();
-            last_message_y = 0;
-        }
-
         TextBubbleBorder border;
         if (messaggio_ricevuto) {//se il messaggio è stato ricevuto lo allineo a sinistra e gli cambio il colore in grigio
             message_lbl.setBounds(10, last_message_y, width, 50);
@@ -214,11 +210,14 @@ public class DrawMessagePage {
 
         int new_line_count = countMatches(message_lbl.getText(), "<br>");
         last_message_y += 60 + 10 * new_line_count;
-        message_lbl.setPreferredSize(new Dimension(message_lbl.getText().length() * 3, new_line_count * 7));
-        panel_lista_messaggi.add(message_lbl);
-        //panel_lista_messaggi.revalidate();
-        panel_lista_messaggi.repaint();
+        // message_lbl.setBounds(panel_lista_messaggi.getWidth() - 50 - width, last_message_y, width, 50);
 
+        panel_lista_messaggi.add(message_lbl);
+
+        panel_lista_messaggi.setPreferredSize(new Dimension(frame.getWidth() - 125, last_message_y + 50));
+        scroll_messages.setViewportView(panel_lista_messaggi);
+        scroll_messages.getVerticalScrollBar().setValue(last_message_y);
+        panel_lista_messaggi.repaint();
     }
 
     void hideStopConnectionPane() {

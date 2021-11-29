@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.security.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -44,7 +47,7 @@ public class DrawMessagePage {
         btn_conferma_ip = null;
         DatiCondivisi d = DatiCondivisi.getInstance();
         d.setDrawMessagePage(this);
-        last_message_y = 0;
+        last_message_y = 100;
     }
 
     public void draw(Frame frame) {
@@ -193,26 +196,33 @@ public class DrawMessagePage {
 
         int width = message_lbl.getText().length() * 11;
         int height = message_lbl.getText().length() * 20;
+        
+        String time_stamp = new SimpleDateFormat("dd/MM/yyyy  HH:mm").format(new Date());
+        JLabel time_label = new JLabel(time_stamp);
+        
 
         TextBubbleBorder border;
         if (messaggio_ricevuto) {//se il messaggio è stato ricevuto lo allineo a sinistra e gli cambio il colore in grigio
             message_lbl.setBounds(10, last_message_y, width, 50);
             message_lbl.setBackground(new Color(204, 204, 204));
             border = new TextBubbleBorder(Color.BLACK, 1, 16, 16);
+            time_label.setBounds(10, last_message_y - 35, width, 50);
         } else {//se il messaggio è stato ricevuto lo allineo a sinistra e gli cambio il colore in azzurro
             message_lbl.setBounds(panel_lista_messaggi.getWidth() - 50 - width, last_message_y, width, 50);
             message_lbl.setText("<html><body><font color='white'>" + message_lbl.getText() + "</font></body></html>");
             message_lbl.setBackground(new Color(71, 160, 255));
             border = new TextBubbleBorder(Color.BLACK, 1, 16, 16, false);
+            time_label.setBounds(panel_lista_messaggi.getWidth() - 50 - width, last_message_y - 35, width, 50);
         }
         message_lbl.setOpaque(true);
         message_lbl.setBorder(border);
 
         int new_line_count = countMatches(message_lbl.getText(), "<br>");
-        last_message_y += 60 + 10 * new_line_count;
-        // message_lbl.setBounds(panel_lista_messaggi.getWidth() - 50 - width, last_message_y, width, 50);
-
+        last_message_y += 60 + 10 * new_line_count + 20;
+        
         panel_lista_messaggi.add(message_lbl);
+        panel_lista_messaggi.add(time_label);
+        
 
         panel_lista_messaggi.setPreferredSize(new Dimension(frame.getWidth() - 125, last_message_y + 50));
         scroll_messages.setViewportView(panel_lista_messaggi);

@@ -1,3 +1,23 @@
 /UDPChat/nbproject/private/
 /UDPChat/build/
 /UDPChat/dist/
+UDPChat/
++ nbproject/
+  build-impl.xml
+  + private/
+  + project.properties
+  + project.xml
++ src/
++ test/
++ build.xml
+UDPChat/
++ build/
++ dist/
++ nbproject/
+  build-impl.xml
+  + private/
+  + project.properties
+  + project.xml
++ src/
++ test/
++ build.xml

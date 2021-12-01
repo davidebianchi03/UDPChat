@@ -120,6 +120,7 @@ public class DrawMessagePage {
         SimpleBorder btn_connect_border = new SimpleBorder(btn_connect_color, 0, 25, btn_connect_padding);//Color border_color, int border_thickness, int border_radius, Insets padding
         btn_connect.setBorder(btn_connect_border);
         btn_connect.setFont(new Font("Verdana", Font.PLAIN, 13));
+        btn_connect.addActionListener(new ButtonConnectClicked(this));
         chat_active_panel.add(btn_connect);
         
         disableMessagesPage();
@@ -202,5 +203,31 @@ public class DrawMessagePage {
             lbl_nickname.setVisible(true);
         }
     }
+
+    public JLabel getLbl_nickname() {
+        return lbl_nickname;
+    }
+
+    public JTextArea getTxt_message() {
+        return txt_message;
+    }
+
+    public JButton getBtn_send_message() {
+        return btn_send_message;
+    }
+
+    public JButton getBtn_stop() {
+        return btn_stop;
+    }
+
+    public JTextField getTxt_indirizzo_ip() {
+        return txt_indirizzo_ip;
+    }
+
+    public JButton getBtn_connect() {
+        return btn_connect;
+    }
+    
+    
 
 }

@@ -31,6 +31,8 @@ public class UI extends JFrame {
     private JTextField txt_nickname = null;
 
     public UI() {
+        SharedData shared_data = SharedData.getInstance();
+        shared_data.setUi(this);
         getContentPane().setLayout(null);//-->Importante 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//fermo tutta l'applicazione quando chiudo il jframe
         setSize(1000, 700);

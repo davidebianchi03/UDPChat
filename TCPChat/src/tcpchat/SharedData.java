@@ -8,6 +8,7 @@ public class SharedData {
     
     private static SharedData instance;
     private String nickname;
+    private UI ui;
     
     private SharedData(){
         
@@ -31,6 +32,20 @@ public class SharedData {
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
+
+    public UI getUi() {
+        return ui;
+    }
+
+    public void setUi(UI ui) {
+        this.ui = ui;
+    }
+    
+    
+
+   
+    
+    
     
     
     

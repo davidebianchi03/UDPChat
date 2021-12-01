@@ -35,6 +35,8 @@ public class DrawNicknameInputPage {
     public void drawPage(){
         //rimuovo tutto dallo schermo
         ui.getContentPane().removeAll();
+        ui.revalidate();
+        ui.repaint();
         //Imagine logo
         URL url = getClass().getResource("/images/logo.png");
         ImageIcon img = new ImageIcon(url);
@@ -72,8 +74,10 @@ public class DrawNicknameInputPage {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //quando il pulsante viene premuto cambio pagina
-                String nickname = txt_nickname.getText();
-                System.out.println(nickname);
+                SharedData shared_data = SharedData.getInstance();
+                shared_data.setNickname(txt_nickname.getText());
+                DrawMessagePage d = new DrawMessagePage(ui);
+                d.drawPage();
             }
         });
         ui.add(btn_confirm);

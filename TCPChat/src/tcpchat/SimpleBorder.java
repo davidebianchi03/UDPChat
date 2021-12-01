@@ -6,6 +6,9 @@ import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
+import java.awt.Rectangle;
+import java.awt.geom.Area;
+import java.awt.geom.RoundRectangle2D;
 import javax.swing.border.AbstractBorder;
 
 /**
@@ -43,8 +46,24 @@ public class SimpleBorder extends AbstractBorder {
         Graphics2D g2 = (Graphics2D) g;;
         BasicStroke stroke = new BasicStroke(border_thickness);
         g2.setStroke(stroke);
-        g2.drawRoundRect(x, y, width, height, border_radius, border_radius);
         
+        RoundRectangle2D.Double border_rect = new RoundRectangle2D.Double(x, y, width, height, border_radius, border_radius);
+        Area area = new Area(border_rect);
+        Component parent_component = c.getParent();
+        if (parent_component != null) {
+            Color bg = parent_component.getBackground();
+            Rectangle rect = new Rectangle(0, 0, width, height);
+            Area borderRegion = new Area(rect);
+            borderRegion.subtract(area);
+            g2.setClip(borderRegion);
+            g2.setColor(bg);
+            g2.fillRect(0, 0, width, height);
+            g2.setClip(null);
+        }
+
+        g2.setColor(border_color);
+        g2.setStroke(stroke);
+        g2.draw(area);
     }
 
     @Override

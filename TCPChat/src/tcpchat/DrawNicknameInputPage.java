@@ -7,6 +7,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -18,21 +19,22 @@ import javax.swing.JTextField;
  * @author Davide
  */
 public class DrawNicknameInputPage {
+
     /*
         Classe che si occupa di disegnare la scherma di input del nickname
-    */
+     */
     private UI ui;
     //Componenti grafici disegnati sullo schermo
     private JLabel lbl_logo_img = null;
     private JLabel lbl_instructions = null;
     private JButton btn_confirm = null;
     private JTextField txt_nickname = null;
-    
-    public DrawNicknameInputPage(UI ui){
+
+    public DrawNicknameInputPage(UI ui) {
         this.ui = ui;
     }
-    
-    public void drawPage(){
+
+    public void drawPage() {
         //rimuovo tutto dallo schermo
         ui.getContentPane().removeAll();
         ui.revalidate();
@@ -50,7 +52,6 @@ public class DrawNicknameInputPage {
         lbl_instructions.setFont(new Font("Verdana", Font.PLAIN, 13));
         lbl_instructions.setBounds(ui.getWidth() / 2 - 100, ui.getHeight() / 2 - 35, 200, 35);
         ui.add(lbl_instructions);
-        System.out.println(ui.getWidth());
 
         //TextField per l'inserimento del nickname
         txt_nickname = new JTextField("Your username");
@@ -70,7 +71,7 @@ public class DrawNicknameInputPage {
         txt_nickname.setBorder(txt_nickname_border);
         btn_confirm.setBorder(button_confirm_border);
         btn_confirm.setBackground(btn_bg_color);
-        btn_confirm.addActionListener(new ActionListener(){
+        btn_confirm.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //quando il pulsante viene premuto cambio pagina
@@ -78,11 +79,20 @@ public class DrawNicknameInputPage {
                 shared_data.setNickname(txt_nickname.getText());
                 DrawMessagePage d = new DrawMessagePage(ui);
                 d.drawPage();
+
+                ui.addComponentListener(new ComponentAdapter() {
+
+                    public void componentResized(ComponentEvent componentEvent) {
+                        d.screenResized();
+                    }
+                }
+                );
+
             }
         });
         ui.add(btn_confirm);
     }
-    
+
     void screenResized() {
         lbl_logo_img.setBounds(ui.getWidth() / 2 - 50, ui.getHeight() / 2 - 140, 100, 100);
         lbl_instructions.setBounds(ui.getWidth() / 2 - 100, ui.getHeight() / 2 - 35, 200, 35);
